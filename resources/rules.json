@@ -1,0 +1,22 @@
+[
+  {
+    "name": "KLMFltCacheCheck",
+    "desc": "when airline is KLM and flt departure is within 3 to 7 days of booking",
+    "salience": 10,
+    "when": "RuleInfo.AirlineCode == \"KL\" && FltSearchRequest.DepartureDateTime > RuleInfo.AddDays(FltSearchRequest.BookingTime, 3) && FltSearchRequest.DepartureDateTime < RuleInfo.AddDays(FltSearchRequest.BookingTime, 7) && RuleInfo.Cacheable == false",
+    "then": [
+      "RuleInfo.Cacheable = true",
+      "Log(\"Result available in cache\")"
+    ]
+  },
+  {
+    "name": "AFFltCacheCheck",
+    "desc": "when airline is AF and flt departure is within 3 to 7 days of booking",
+    "salience": 10,
+    "when": "RuleInfo.AirlineCode == \"AF\" && FltSearchRequest.DepartureDateTime > RuleInfo.AddDays(FltSearchRequest.BookingTime, 3) && FltSearchRequest.DepartureDateTime < RuleInfo.AddDays(FltSearchRequest.BookingTime, 7) && RuleInfo.Cacheable == false",
+    "then": [
+      "RuleInfo.Cacheable = true",
+      "Log(\"Result available in cache\")"
+    ]
+  }
+]
