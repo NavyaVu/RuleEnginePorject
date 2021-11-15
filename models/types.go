@@ -23,8 +23,8 @@ type FlightCacheSearchQuery struct {
 }
 
 type SearchResponse struct {
-	Cacheable   bool `json:"cacheable"`
-	AirlineCode string
+	Cacheable   bool   `json:"cacheable"`
+	AirlineCode string `json:"airlineCode"`
 }
 
 type KnowledgeBaseForCacheRule struct {

@@ -3,9 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"ruleEngineProject/models"
 	"ruleEngineProject/service"
 	"time"
@@ -19,13 +17,14 @@ func NewRuleChecker(l *log.Logger) *Rules {
 	return &Rules{l}
 }
 
-func (rl *Rules) GetRuleCheck(rw http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		panic(err)
-	}
+//func (rl *Rules) GetRuleCheck(rw http.ResponseWriter, r *http.Request){
+func (rl *Rules) GetRuleCheck(r string) []byte {
+	//body, err := ioutil.ReadAll(r.Body)
+	//if err != nil {
+	//	panic(err)
+	//}
 	fcsQuery := models.FlightCacheSearchQuery{}
-	err = json.Unmarshal([]byte(body), &fcsQuery)
+	err := json.Unmarshal([]byte(r), &fcsQuery)
 	if err != nil {
 		panic(err)
 	}
@@ -48,10 +47,11 @@ func (rl *Rules) GetRuleCheck(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	_, err = rw.Write(responseData)
-	if err != nil {
-		fmt.Println("Error in writing response: ", err.Error())
-	}
+	//_, err = rw.Write(responseData)
+	//if err != nil {
+	//	fmt.Println("Error in writing response: ", err.Error())
+	//}
+	return responseData
 }
 
 func translateRequest(query *models.FlightCacheSearchQuery) *models.SearchRequest {
