@@ -61,8 +61,8 @@ func HandleRequest(input interface{}) (interface{}, error) {
 	//log.Println(string(inputRequest))
 	inputRequestAsString := string(inputRequest)
 	containsHeader := strings.Contains(inputRequestAsString, "headers")
-	err = json.Unmarshal(inputRequest, &req)
-	if err != nil || !containsHeader {
+
+	if !containsHeader {
 		log.Println("unable to unmarshal input from json to APIGatewayRequest type or contains header is ", containsHeader)
 		apiResponse, err := performRuleCheck(inputRequestAsString)
 		if err != nil {
@@ -71,6 +71,10 @@ func HandleRequest(input interface{}) (interface{}, error) {
 			return apiResponse, err
 		}
 	} else if containsHeader {
+		err = json.Unmarshal(inputRequest, &req)
+		if err != nil {
+			log.Println("unable to unmarshal input from json")
+		}
 		log.Println("request path", req.Path)
 		if req.HTTPMethod == http.MethodPost {
 			apiResponse, err := performRuleCheck(req.Body)
@@ -88,7 +92,11 @@ func HandleRequest(input interface{}) (interface{}, error) {
 		err = errors.New("nothing executed")
 	}
 
-	return events.APIGatewayProxyResponse{Body: "Nothing Executed", StatusCode: http.StatusOK, IsBase64Encoded: false, Headers: nil}, err
+	if containsHeader {
+		return events.APIGatewayProxyResponse{Body: "Nothing Executed", StatusCode: http.StatusOK, IsBase64Encoded: false, Headers: nil}, err
+	} else {
+		return "Nothing Executed", err
+	}
 
 }
 
