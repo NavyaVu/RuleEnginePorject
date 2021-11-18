@@ -18,7 +18,7 @@ func NewRuleChecker(l *log.Logger) *Rules {
 }
 
 //func (rl *Rules) GetRuleCheck(rw http.ResponseWriter, r *http.Request){
-func (rl *Rules) GetRuleCheck(r string) []byte {
+func (rl *Rules) GetRuleCheck(r string) ([]byte, error) {
 	//body, err := ioutil.ReadAll(r.Body)
 	//if err != nil {
 	//	panic(err)
@@ -51,7 +51,7 @@ func (rl *Rules) GetRuleCheck(r string) []byte {
 	//if err != nil {
 	//	fmt.Println("Error in writing response: ", err.Error())
 	//}
-	return responseData
+	return responseData, err
 }
 
 func translateRequest(query *models.FlightCacheSearchQuery) *models.SearchRequest {
