@@ -7,33 +7,20 @@ import (
 	"github.com/hyperjumptech/grule-rule-engine/engine"
 	"github.com/hyperjumptech/grule-rule-engine/pkg"
 	"io/ioutil"
+	"log"
 	"path/filepath"
 	"ruleEngineProject/models"
-	"strings"
 )
 
 func LoadRules(name, version string) *ast.KnowledgeBase {
 	lib := ast.NewKnowledgeLibrary()
 	ruleBuilder := builder.NewRuleBuilder(lib)
 
-	rulesFile, err := filepath.Abs("rules.json")
-	//rulesFile, err := filepath.Abs("../resources/rules.json") //TODO change when tested from controller
-	//TODO need to solve by having a uniform access from test file as well as controller
-	fmt.Println(rulesFile)
+	rulesFile, err := filepath.Abs("./resources/rules.json")
 
 	jsonData, err := ioutil.ReadFile(rulesFile)
 	if err != nil {
-		if strings.Contains(err.Error(), "The system cannot find the path specified") {
-			err = nil
-			//rulesFile, err = filepath.Abs("../ruleEngineProject/resources/rules.json")
-			rulesFile, err = filepath.Abs("rules.json")
-			jsonData, err = ioutil.ReadFile(rulesFile)
-			if err != nil {
-				panic(err)
-			}
-		} else {
-			panic(err)
-		}
+		log.Panicln("Rules file not found ", err.Error())
 	}
 	ruleset, err := pkg.ParseJSONRuleset(jsonData)
 	if err != nil {
@@ -62,12 +49,12 @@ func LoadDataContextToKnowledgeBase(searchRequest *models.SearchRequest,
 }
 
 func Execute(searchRequest *models.SearchRequest, searchResponse *models.SearchResponse,
-	name, version string) *models.SearchResponse {
+	ruleEngineInstance *engine.GruleEngine,
+	knowledgeBase *ast.KnowledgeBase) *models.SearchResponse {
 	dataContext := LoadDataContextToKnowledgeBase(searchRequest, searchResponse)
-	kb := LoadRules(name, version)
-	eng1 := &engine.GruleEngine{MaxCycle: 100}
-	//fetch matching rules
-	ruleEntries, err := eng1.FetchMatchingRules(*dataContext, kb)
+
+	//fetch matching rules TODO remove after analysis
+	ruleEntries, err := ruleEngineInstance.FetchMatchingRules(*dataContext, knowledgeBase)
 	if err != nil {
 		fmt.Println("Unable to fetch all matching rules")
 		panic(err)
@@ -78,7 +65,7 @@ func Execute(searchRequest *models.SearchRequest, searchResponse *models.SearchR
 		}
 	}
 
-	err = eng1.Execute(*dataContext, kb)
+	err = ruleEngineInstance.Execute(*dataContext, knowledgeBase)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -2,20 +2,36 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/hyperjumptech/grule-rule-engine/ast"
+	"github.com/hyperjumptech/grule-rule-engine/engine"
 	"log"
 	"net/http"
 	"os"
 	"reflect"
 	"ruleEngineProject/handlers"
+	"ruleEngineProject/ruleEngine"
 	"strings"
-
-	"errors"
-	"github.com/aws/aws-lambda-go/events"
 
 	//"ruleEngineProject/controller"
 	"github.com/aws/aws-lambda-go/lambda"
 )
+
+var (
+	ruleEngineInstance                      *engine.GruleEngine
+	knowledgeBase                           *ast.KnowledgeBase
+	knowledgeBaseName, knowledgeBaseVersion string
+)
+
+func init() {
+	ruleEngineInstance = engine.NewGruleEngine()
+	knowledgeBaseName = "Test"
+	knowledgeBaseVersion = "0.0.1"
+	knowledgeBase = ruleEngine.LoadRules(knowledgeBaseName, knowledgeBaseVersion)
+
+}
 
 func main() {
 
@@ -73,7 +89,7 @@ func HandleRequest(input interface{}) (interface{}, error) {
 func performRuleCheck(request string) (string, error) {
 	l := log.New(os.Stdout, "Rules-API", log.LstdFlags)
 	rc := handlers.NewRuleChecker(l)
-	apiResponse, err := rc.GetRuleCheck(request)
+	apiResponse, err := rc.GetRuleCheck(request, ruleEngineInstance, knowledgeBase)
 
 	return string(apiResponse), err
 }

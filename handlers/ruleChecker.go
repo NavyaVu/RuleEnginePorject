@@ -3,6 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hyperjumptech/grule-rule-engine/ast"
+	"github.com/hyperjumptech/grule-rule-engine/engine"
 	"log"
 	"ruleEngineProject/models"
 	"ruleEngineProject/service"
@@ -17,12 +19,9 @@ func NewRuleChecker(l *log.Logger) *Rules {
 	return &Rules{l}
 }
 
-//func (rl *Rules) GetRuleCheck(rw http.ResponseWriter, r *http.Request){
-func (rl *Rules) GetRuleCheck(r string) ([]byte, error) {
-	//body, err := ioutil.ReadAll(r.Body)
-	//if err != nil {
-	//	panic(err)
-	//}
+func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
+	knowledgeBase *ast.KnowledgeBase) ([]byte, error) {
+
 	fcsQuery := models.FlightCacheSearchQuery{}
 	err := json.Unmarshal([]byte(r), &fcsQuery)
 	if err != nil {
@@ -37,11 +36,8 @@ func (rl *Rules) GetRuleCheck(r string) ([]byte, error) {
 			AirlineCode: searchRequest.AirlineCode,
 		},
 	}
-	kbDetails := &models.KnowledgeBaseForCacheRule{
-		Name:    "Test",
-		Version: "0.0.1",
-	}
-	response := flightCacheService.Search(kbDetails)
+
+	response := flightCacheService.Search(ruleEngineInstance, knowledgeBase)
 	fmt.Println(searchRequest.DepartureDateTime, " console check ", response.Cacheable)
 	responseData, err := json.Marshal(response) //(response.TfmRessponse)
 	if err != nil {

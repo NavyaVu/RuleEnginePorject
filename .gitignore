@@ -3,3 +3,5 @@
 /ruleEngineProject.exe
 /main
 /rules.json
+/aws/lambda/main
+/aws/lambda/main.zip

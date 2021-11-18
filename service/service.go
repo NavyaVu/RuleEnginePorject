@@ -1,7 +1,9 @@
 package service
 
 import (
-	"fmt"
+	"github.com/hyperjumptech/grule-rule-engine/ast"
+	"github.com/hyperjumptech/grule-rule-engine/engine"
+	"log"
 	"ruleEngineProject/models"
 	"ruleEngineProject/ruleEngine"
 )
@@ -11,10 +13,11 @@ type FlightCacheService struct {
 	Response *models.SearchResponse
 }
 
-func (f FlightCacheService) Search(knowledgeBaseDetails *models.KnowledgeBaseForCacheRule) *models.SearchResponse {
-	response := ruleEngine.Execute(f.Request, f.Response,
-		knowledgeBaseDetails.Name, knowledgeBaseDetails.Version)
+func (f FlightCacheService) Search(ruleEngineInstance *engine.GruleEngine,
+	knowledgeBase *ast.KnowledgeBase) *models.SearchResponse {
+	response := ruleEngine.Execute(f.Request, f.Response, ruleEngineInstance,
+		knowledgeBase)
 
-	fmt.Println(response.Cacheable)
+	log.Println(response.Cacheable)
 	return response
 }
