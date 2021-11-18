@@ -37,7 +37,7 @@ func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 		},
 	}
 
-	response := flightCacheService.Search(ruleEngineInstance, knowledgeBase)
+	response, err := flightCacheService.Search(ruleEngineInstance, knowledgeBase)
 	fmt.Println(searchRequest.DepartureDateTime, " console check ", response.Cacheable)
 	responseData, err := json.Marshal(response) //(response.TfmRessponse)
 	if err != nil {

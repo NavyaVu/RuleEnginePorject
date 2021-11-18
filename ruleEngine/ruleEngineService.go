@@ -50,7 +50,7 @@ func LoadDataContextToKnowledgeBase(searchRequest *models.SearchRequest,
 
 func Execute(searchRequest *models.SearchRequest, searchResponse *models.SearchResponse,
 	ruleEngineInstance *engine.GruleEngine,
-	knowledgeBase *ast.KnowledgeBase) *models.SearchResponse {
+	knowledgeBase *ast.KnowledgeBase) (*models.SearchResponse, error) {
 	dataContext := LoadDataContextToKnowledgeBase(searchRequest, searchResponse)
 
 	//fetch matching rules TODO remove after analysis
@@ -69,5 +69,5 @@ func Execute(searchRequest *models.SearchRequest, searchResponse *models.SearchR
 	if err != nil {
 		fmt.Println(err)
 	}
-	return searchResponse
+	return searchResponse, err
 }

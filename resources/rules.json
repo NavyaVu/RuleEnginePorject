@@ -18,5 +18,15 @@
       "RuleInfo.Cacheable = true",
       "Log(\"Result available in cache\")"
     ]
+  },
+  {
+    "name": "FlightRouteAMSHAJCheck",
+    "desc": "when origin is AMS and destination is HAJ",
+    "salience": 10,
+    "when": "FltSearchRequest.DepartureAirportCode == \"AMS\" && FltSearchRequest.ArrivalAirportCode == \"HAJ\" && RuleInfo.Cacheable == false",
+    "then": [
+      "RuleInfo.Cacheable = true",
+      "Log(\"Result available in cache\")"
+    ]
   }
 ]

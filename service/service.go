@@ -14,10 +14,10 @@ type FlightCacheService struct {
 }
 
 func (f FlightCacheService) Search(ruleEngineInstance *engine.GruleEngine,
-	knowledgeBase *ast.KnowledgeBase) *models.SearchResponse {
-	response := ruleEngine.Execute(f.Request, f.Response, ruleEngineInstance,
+	knowledgeBase *ast.KnowledgeBase) (*models.SearchResponse, error) {
+	response, err := ruleEngine.Execute(f.Request, f.Response, ruleEngineInstance,
 		knowledgeBase)
 
 	log.Println(response.Cacheable)
-	return response
+	return response, err
 }

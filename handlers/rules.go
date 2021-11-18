@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"github.com/gorilla/mux"
+	//"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"ruleEngineProject/data"
-	"strconv"
+	//"strconv"
 )
 
 type Rules struct {
@@ -40,7 +40,7 @@ func (rl *Rules) AddRule(rw http.ResponseWriter, r *http.Request) {
 
 func (rl *Rules) UpdateRule(rw http.ResponseWriter, r *http.Request) {
 
-	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
-	rl.l.Println("Updates the Rule: ", id)
+	//vars := mux.Vars(r)
+	//id, _ := strconv.Atoi(vars["id"])
+	//rl.l.Println("Updates the Rule: ", id)
 }
