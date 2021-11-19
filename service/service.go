@@ -13,6 +13,7 @@ type FlightCacheService struct {
 	Response *models.SearchResponse
 }
 
+// Search Initiates the call to rule Engine service to check the Matching rules for the given Request
 func (f FlightCacheService) Search(ruleEngineInstance *engine.GruleEngine,
 	knowledgeBase *ast.KnowledgeBase) (*models.SearchResponse, error) {
 	response, err := ruleEngine.Execute(f.Request, f.Response, ruleEngineInstance,

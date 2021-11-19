@@ -93,7 +93,7 @@ func main() {
 //
 //	result, err := client.Invoke(&lambdaService.InvokeInput{FunctionName: aws.String("MyGetItemsFunction"), Payload: payload})
 //	if err != nil {
-//		fmt.Println("Error calling MyGetItemsFunction")
+//		log.Println("Error calling MyGetItemsFunction")
 //		os.Exit(0)
 //	}
 //

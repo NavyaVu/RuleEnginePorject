@@ -1,0 +1,3 @@
+knowledgeBaseDetails-Name: Test
+knowledgeBaseDetails-Version: 0.0.1
+rule-file-path : ./resources/rules.json

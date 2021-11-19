@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/hyperjumptech/grule-rule-engine/ast"
 	"github.com/hyperjumptech/grule-rule-engine/engine"
@@ -11,25 +10,30 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"ruleEngineProject/config"
 	"ruleEngineProject/handlers"
 	"ruleEngineProject/ruleEngine"
 	"strings"
 
 	//"ruleEngineProject/controller"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/magiconair/properties"
 )
 
 var (
-	ruleEngineInstance                      *engine.GruleEngine
-	knowledgeBase                           *ast.KnowledgeBase
-	knowledgeBaseName, knowledgeBaseVersion string
+	ruleEngineInstance   *engine.GruleEngine
+	knowledgeBase        *ast.KnowledgeBase
+	ruleEngineProperties *properties.Properties
+	//knowledgeBaseName, knowledgeBaseVersion string
 )
 
 func init() {
+	ruleEngineProperties = config.LoadProperties()
 	ruleEngineInstance = engine.NewGruleEngine()
-	knowledgeBaseName = "Test"
-	knowledgeBaseVersion = "0.0.1"
-	knowledgeBase = ruleEngine.LoadRules(knowledgeBaseName, knowledgeBaseVersion)
+	knowledgeBaseName, _ := ruleEngineProperties.Get("knowledgeBaseDetails-Name")
+	knowledgeBaseVersion, _ := ruleEngineProperties.Get("knowledgeBaseDetails-Version")
+	rulesFilePath, _ := ruleEngineProperties.Get("rule-file-path")
+	knowledgeBase = ruleEngine.LoadRules(knowledgeBaseName, knowledgeBaseVersion, rulesFilePath)
 
 }
 
@@ -39,6 +43,7 @@ func main() {
 
 }
 
+// HandleRequest : Lambda handler
 func HandleRequest(input interface{}) (interface{}, error) {
 	log.Println("type:", reflect.TypeOf(input))
 
@@ -61,7 +66,7 @@ func HandleRequest(input interface{}) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		} else {
-			fmt.Println("Response: ", apiResponse)
+			log.Println("Response: ", apiResponse)
 			return apiResponse, err
 		}
 	} else if containsHeader {
@@ -86,6 +91,7 @@ func HandleRequest(input interface{}) (interface{}, error) {
 
 }
 
+// Performs the rules check in rule Engine
 func performRuleCheck(request string) (string, error) {
 	l := log.New(os.Stdout, "Rules-API", log.LstdFlags)
 	rc := handlers.NewRuleChecker(l)
@@ -131,7 +137,7 @@ func performRuleCheck(request string) (string, error) {
 //
 //	result, err := client.Invoke(&lambdaService.InvokeInput{FunctionName: aws.String("MyGetItemsFunction"), Payload: payload})
 //	if err != nil {
-//		fmt.Println("Error calling MyGetItemsFunction")
+//		log.Println("Error calling MyGetItemsFunction")
 //		os.Exit(0)
 //	}
 //

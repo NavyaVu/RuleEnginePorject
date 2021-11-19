@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/hyperjumptech/grule-rule-engine/ast"
 	"github.com/hyperjumptech/grule-rule-engine/engine"
 	"log"
@@ -19,6 +18,7 @@ func NewRuleChecker(l *log.Logger) *Rules {
 	return &Rules{l}
 }
 
+// GetRuleCheck Takes the request from Flight Cache service and checks if it needs to be cached or not
 func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 	knowledgeBase *ast.KnowledgeBase) ([]byte, error) {
 
@@ -38,22 +38,23 @@ func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 	}
 
 	response, err := flightCacheService.Search(ruleEngineInstance, knowledgeBase)
-	fmt.Println(searchRequest.DepartureDateTime, " console check ", response.Cacheable)
+	log.Println(searchRequest.DepartureDateTime, " console check ", response.Cacheable)
 	responseData, err := json.Marshal(response) //(response.TfmRessponse)
 	if err != nil {
 		panic(err)
 	}
 	//_, err = rw.Write(responseData)
 	//if err != nil {
-	//	fmt.Println("Error in writing response: ", err.Error())
+	//	log.Println("Error in writing response: ", err.Error())
 	//}
 	return responseData, err
 }
 
+// Translates the given Flight Cache Search Query to Search Request
 func translateRequest(query *models.FlightCacheSearchQuery) *models.SearchRequest {
 	return &models.SearchRequest{
 		Cacheable:            false,
-		AirlineCode:          "KL", //TODO limited to AF for the poc
+		AirlineCode:          query.AirlineCode,
 		DepartureAirportCode: query.Origin,
 		ArrivalAirportCode:   query.Destination,
 		DepartureDateTime:    convertDate(query.DepartureDateTimeInUtc),
@@ -68,7 +69,7 @@ func convertDate(date string) time.Time {
 	t, err := time.Parse(layout, date)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	return t

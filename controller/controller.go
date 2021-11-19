@@ -50,5 +50,5 @@ package controller
 //
 //	body,err := ioutil.ReadAll(r.Body)
 //	if err != nil{
-//	fmt.Println(body)
+//	log.Println(body)
 //	}
