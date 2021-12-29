@@ -2,7 +2,7 @@
   {
     "name": "KLMFltCacheCheck",
     "desc": "when airline is KLM and flt departure is within 3 to 7 days of booking",
-    "salience": 10,
+    "salience": 9,
     "when": "FltSearchRequest.AirlineCode == \"KL\" && FltSearchRequest.DepartureDateTime > RuleInfo.AddDays(FltSearchRequest.BookingTime, 3) && FltSearchRequest.DepartureDateTime < RuleInfo.AddDays(FltSearchRequest.BookingTime, 7) && RuleInfo.Cacheable == false",
     "then": [
       "RuleInfo.Cacheable = true",
@@ -12,7 +12,7 @@
   {
     "name": "AFFltCacheCheck",
     "desc": "when airline is AF and flt departure is within 3 to 7 days of booking",
-    "salience": 10,
+    "salience": 9,
     "when": "FltSearchRequest.AirlineCode == \"AF\" && FltSearchRequest.DepartureDateTime > RuleInfo.AddDays(FltSearchRequest.BookingTime, 3) && FltSearchRequest.DepartureDateTime < RuleInfo.AddDays(FltSearchRequest.BookingTime, 7) && RuleInfo.Cacheable == false",
     "then": [
       "RuleInfo.Cacheable = true",
@@ -22,11 +22,23 @@
   {
     "name": "FlightRouteAMSHAJCheck",
     "desc": "when origin is AMS and destination is HAJ",
-    "salience": 10,
+    "salience": 9,
     "when": "FltSearchRequest.DepartureAirportCode == \"AMS\" && FltSearchRequest.ArrivalAirportCode == \"HAJ\" && RuleInfo.Cacheable == false",
     "then": [
       "RuleInfo.Cacheable = true",
       "Log(\"Result available in cache\")"
+    ]
+  },
+  {
+    "name": "FlightDepartureDateCheck",
+    "desc": "when the flight's departure date is a past date",
+    "salience": 10,
+    "when": "RuleInfo.IsPastDate(FltSearchRequest.DepartureDateTime) && RuleInfo.Cacheable == false",
+    "then": [
+      "RuleInfo.Cacheable = false",
+      "RuleInfo.AirlineCode = FltSearchRequest.AirlineCode",
+      "Log(\"Result not available in cache\")",
+      "Retract(\"FlightDepartureDateCheck\")"
     ]
   }
 ]

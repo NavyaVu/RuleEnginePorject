@@ -35,6 +35,46 @@ func Test_CheckForRoute(t *testing.T) {
 		err error
 	)
 	setup()
+	unCacheableRequest := &models.SearchRequest{
+		Cacheable:            false,
+		AirlineCode:          "AF",
+		DepartureAirportCode: "NYC",
+		ArrivalAirportCode:   "HAJ",
+		DepartureDateTime:    time.Now().Add(time.Hour * 24),
+		ArrivalDateTime:      time.Now().Add(time.Hour * 72),
+		RoundTrip:            true,
+		BookingTime:          time.Now(),
+	}
+
+	cacheableRequest := &models.SearchRequest{
+		Cacheable:            false,
+		AirlineCode:          "AF",
+		DepartureAirportCode: "AMS",
+		ArrivalAirportCode:   "HAJ",
+		DepartureDateTime:    time.Now().Add(time.Hour * 24),
+		ArrivalDateTime:      time.Now().Add(time.Hour * 72),
+		RoundTrip:            true,
+		BookingTime:          time.Now(),
+	}
+
+	//response.AddDays(time.Now(), 8)
+	response := &models.SearchResponse{}
+	response, err = ruleEngine.Execute(unCacheableRequest, response, ruleEngineInstance, knowledgeBase)
+	//log.Println(response.AddDays(request.DepartureDateTime, 3), ": Days")
+	assert.NoError(t, err)
+	assert.Equal(t, false, response.Cacheable, "Cache validation should pass but didn't for flt route")
+
+	response, err = ruleEngine.Execute(cacheableRequest, response, ruleEngineInstance, knowledgeBase)
+	//log.Println(response.AddDays(request.DepartureDateTime, 3), ": Days")
+	assert.NoError(t, err)
+	assert.Equal(t, true, response.Cacheable, "Cache validation should pass but didn't for flt route")
+}
+
+func Test_CheckForPastDate(t *testing.T) {
+	var (
+		err error
+	)
+	setup()
 	request := &models.SearchRequest{
 		Cacheable:            false,
 		AirlineCode:          "AF",
@@ -53,5 +93,5 @@ func Test_CheckForRoute(t *testing.T) {
 	response, err = ruleEngine.Execute(request, response, ruleEngineInstance, knowledgeBase)
 	//log.Println(response.AddDays(request.DepartureDateTime, 3), ": Days")
 	assert.NoError(t, err)
-	assert.Equal(t, true, response.Cacheable, "Cache validation should pass but didn't for flt time")
+	assert.Equal(t, false, response.Cacheable, "Should return false for past dates")
 }

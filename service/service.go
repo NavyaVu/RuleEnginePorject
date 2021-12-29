@@ -8,6 +8,13 @@ import (
 	"ruleEngineProject/ruleEngine"
 )
 
+var FlightRuleServiceType FlightRuleService
+
+type FlightRuleService interface {
+	Search(ruleEngineInstance *engine.GruleEngine,
+		knowledgeBase *ast.KnowledgeBase) (*models.SearchResponse, error)
+}
+
 type FlightCacheService struct {
 	Request  *models.SearchRequest
 	Response *models.SearchResponse

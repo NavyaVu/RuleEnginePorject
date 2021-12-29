@@ -17,10 +17,13 @@ func LoadRules(name, version string, rulesFilePath string) *ast.KnowledgeBase {
 	ruleBuilder := builder.NewRuleBuilder(lib)
 
 	rulesFile, err := filepath.Abs(rulesFilePath)
+	if err != nil {
+		log.Panicln("Rules file not found at ", rulesFilePath, " error: ", err.Error())
+	}
 
 	jsonData, err := ioutil.ReadFile(rulesFile)
 	if err != nil {
-		log.Panicln("Rules file not found ", err.Error())
+		log.Panicln("Rules file could not be parsed as json ", err.Error())
 	}
 	ruleset, err := pkg.ParseJSONRuleset(jsonData)
 	if err != nil {
