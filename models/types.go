@@ -11,6 +11,8 @@ type SearchRequest struct {
 	ArrivalDateTime      time.Time
 	RoundTrip            bool
 	BookingTime          time.Time
+	RequestType          string
+	RuleGroup            string
 }
 
 type FlightCacheSearchQuery struct {
@@ -20,11 +22,19 @@ type FlightCacheSearchQuery struct {
 	Origin                 string `json:"origin"`
 	Destination            string `json:"destination"`
 	JourneyType            string `json:"journeyType"`
+	RequestType            string `json:"requestType"`
+	RequestGroup           string `json:"requestGroup"`
 }
 
 type SearchResponse struct {
-	Cacheable   bool   `json:"cacheable"`
-	AirlineCode string `json:"airlineCode"`
+	Cacheable               bool   `json:"cacheable"`
+	IsPeakworkData          bool   `json:"isPeakworkData"`
+	AirlineCode             string `json:"airlineCode"`
+	Destinations            string `json:"destinations"`
+	Origins                 string `json:"origins"`
+	PeakworkEarliestDepDate string `json:"peakworkEarliestDepDate"`
+	PeakworkLatestDepDate   string `json:"peakworkLatestDepDate"`
+	PeakworkFltDurations    string `json:"peakworkFltDurations"`
 }
 
 type KnowledgeBaseForCacheRule struct {

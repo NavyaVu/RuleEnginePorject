@@ -40,5 +40,21 @@
       "Log(\"Result not available in cache\")",
       "Retract(\"FlightDepartureDateCheck\")"
     ]
+  },
+  {
+    "name": "PeakworkDataIngestion",
+    "desc": "rule to provide the search details for Peakwork",
+    "salience": 10,
+    "when": "FltSearchRequest.RuleGroup == \"Peakwork\" && FltSearchRequest.RequestType == \"GetSearchScenarios\" && RuleInfo.Cacheable == false",
+    "then": [
+      "RuleInfo.Cacheable = true",
+      "RuleInfo.Origins = \"AMS, WAW, LHR\"",
+      "RuleInfo.Destinations = \"HAJ, NYC, VIE\"",
+      "RuleInfo.AirlineCode = \"AF, KL, EK\"",
+      "RuleInfo.PeakworkEarliestDepDate = \"2022-02-01\"",
+      "RuleInfo.PeakworkLatestDepDate = \"2024-12-31\"",
+      "RuleInfo.PeakworkFltDurations = \"3, 5, 7\"",
+      "Log(\"Result available in cache\")"
+    ]
   }
 ]

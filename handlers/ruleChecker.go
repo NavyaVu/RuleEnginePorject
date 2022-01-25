@@ -61,6 +61,8 @@ func translateRequest(query *models.FlightCacheSearchQuery) *models.SearchReques
 		ArrivalDateTime:      time.Time{},
 		RoundTrip:            isRoundTripJourney(query.JourneyType),
 		BookingTime:          time.Now(),
+		RequestType:          query.RequestType,
+		RuleGroup:            query.RequestGroup,
 	}
 }
 
