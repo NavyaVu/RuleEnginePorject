@@ -32,8 +32,9 @@ func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 	flightCacheService := &service.FlightCacheService{
 		Request: searchRequest,
 		Response: &models.SearchResponse{
-			Cacheable:   false,
-			AirlineCode: searchRequest.AirlineCode,
+			Cacheable:             false,
+			AirlineCode:           searchRequest.AirlineCode,
+			IsProcessingCompleted: false,
 		},
 	}
 
@@ -53,16 +54,17 @@ func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 // Translates the given Flight Cache Search Query to Search Request
 func translateRequest(query *models.FlightCacheSearchQuery) *models.SearchRequest {
 	return &models.SearchRequest{
-		Cacheable:            false,
-		AirlineCode:          query.AirlineCode,
-		DepartureAirportCode: query.Origin,
-		ArrivalAirportCode:   query.Destination,
-		DepartureDateTime:    convertDate(query.DepartureDateTimeInUtc),
-		ArrivalDateTime:      time.Time{},
-		RoundTrip:            isRoundTripJourney(query.JourneyType),
-		BookingTime:          time.Now(),
-		RequestType:          query.RequestType,
-		RuleGroup:            query.RequestGroup,
+		Cacheable:             false,
+		AirlineCode:           query.AirlineCode,
+		DepartureAirportCode:  query.Origin,
+		ArrivalAirportCode:    query.Destination,
+		DepartureDateTime:     convertDate(query.DepartureDateTimeInUtc),
+		ArrivalDateTime:       time.Time{},
+		RoundTrip:             isRoundTripJourney(query.JourneyType),
+		BookingTime:           time.Now(),
+		RequestType:           query.RequestType,
+		RuleGroup:             query.RequestGroup,
+		IsProcessingCompleted: false,
 	}
 }
 

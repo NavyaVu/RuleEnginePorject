@@ -96,6 +96,29 @@ func Test_CheckForPastDate(t *testing.T) {
 	assert.Equal(t, false, response.Cacheable, "Should return false for past dates")
 }
 
+func Test_CheckForPastDateTest(t *testing.T) {
+	var (
+		err error
+	)
+	setup()
+	request := &models.SearchRequest{
+		Cacheable:            false,
+		AirlineCode:          "AF",
+		DepartureAirportCode: "AMS",
+		ArrivalAirportCode:   "HAJ",
+		DepartureDateTime:    time.Date(2021, 11, 23, 0, 0, 0, 0, time.Local),
+		ArrivalDateTime:      time.Date(2021, 11, 25, 0, 0, 0, 0, time.Local),
+		RoundTrip:            true,
+		BookingTime:          time.Now(),
+	}
+
+	response := &models.SearchResponse{}
+
+	response, err = ruleEngine.Execute(request, response, ruleEngineInstance, knowledgeBase)
+	assert.NoError(t, err)
+	assert.Equal(t, false, response.Cacheable, "Should return false for past dates")
+}
+
 func Test_CheckForPeakworkRule(t *testing.T) {
 	var (
 		err error

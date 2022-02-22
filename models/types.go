@@ -3,16 +3,17 @@ package models
 import "time"
 
 type SearchRequest struct {
-	Cacheable            bool
-	AirlineCode          string
-	DepartureAirportCode string
-	ArrivalAirportCode   string
-	DepartureDateTime    time.Time
-	ArrivalDateTime      time.Time
-	RoundTrip            bool
-	BookingTime          time.Time
-	RequestType          string
-	RuleGroup            string
+	Cacheable             bool
+	AirlineCode           string
+	DepartureAirportCode  string
+	ArrivalAirportCode    string
+	DepartureDateTime     time.Time
+	ArrivalDateTime       time.Time
+	RoundTrip             bool
+	BookingTime           time.Time
+	RequestType           string
+	RuleGroup             string
+	IsProcessingCompleted bool
 }
 
 type FlightCacheSearchQuery struct {
@@ -35,6 +36,7 @@ type SearchResponse struct {
 	PeakworkEarliestDepDate string `json:"peakworkEarliestDepDate"`
 	PeakworkLatestDepDate   string `json:"peakworkLatestDepDate"`
 	PeakworkFltDurations    string `json:"peakworkFltDurations"`
+	IsProcessingCompleted   bool   `json:"isProcessingCompleted"`
 }
 
 type KnowledgeBaseForCacheRule struct {

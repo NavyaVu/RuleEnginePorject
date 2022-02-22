@@ -6,7 +6,8 @@
     "when": "FltSearchRequest.AirlineCode == \"KL\" && FltSearchRequest.DepartureDateTime > RuleInfo.AddDays(FltSearchRequest.BookingTime, 3) && FltSearchRequest.DepartureDateTime < RuleInfo.AddDays(FltSearchRequest.BookingTime, 7) && RuleInfo.Cacheable == false",
     "then": [
       "RuleInfo.Cacheable = true",
-      "Log(\"Result available in cache\")"
+      "Log(\"Result available in cache\")",
+      "Retract(\"KLMFltCacheCheck\")"
     ]
   },
   {
@@ -16,26 +17,29 @@
     "when": "FltSearchRequest.AirlineCode == \"AF\" && FltSearchRequest.DepartureDateTime > RuleInfo.AddDays(FltSearchRequest.BookingTime, 3) && FltSearchRequest.DepartureDateTime < RuleInfo.AddDays(FltSearchRequest.BookingTime, 7) && RuleInfo.Cacheable == false",
     "then": [
       "RuleInfo.Cacheable = true",
-      "Log(\"Result available in cache\")"
+      "Log(\"Result available in cache\")",
+      "Retract(\"AFFltCacheCheck\")"
     ]
   },
   {
     "name": "FlightRouteAMSHAJCheck",
     "desc": "when origin is AMS and destination is HAJ",
-    "salience": 9,
-    "when": "FltSearchRequest.DepartureAirportCode == \"AMS\" && FltSearchRequest.ArrivalAirportCode == \"HAJ\" && RuleInfo.Cacheable == false",
+    "salience": 8,
+    "when": "FltSearchRequest.DepartureAirportCode == \"AMS\" && FltSearchRequest.ArrivalAirportCode == \"HAJ\" && RuleInfo.IsProcessingCompleted == false",
     "then": [
       "RuleInfo.Cacheable = true",
-      "Log(\"Result available in cache\")"
+      "RuleInfo.IsProcessingCompleted = true",
+      "Log(\"Result available in cache\")",
+      "Retract(\"FlightRouteAMSHAJCheck\")"
     ]
   },
   {
     "name": "FlightDepartureDateCheck",
     "desc": "when the flight's departure date is a past date",
     "salience": 10,
-    "when": "RuleInfo.IsPastDate(FltSearchRequest.DepartureDateTime) && RuleInfo.Cacheable == false",
+    "when": "RuleInfo.IsPastDate(FltSearchRequest.DepartureDateTime) && RuleInfo.IsProcessingCompleted == false",
     "then": [
-      "RuleInfo.Cacheable = false",
+      "RuleInfo.IsProcessingCompleted = true",
       "RuleInfo.AirlineCode = FltSearchRequest.AirlineCode",
       "Log(\"Result not available in cache\")",
       "Retract(\"FlightDepartureDateCheck\")"
@@ -50,11 +54,13 @@
       "RuleInfo.Cacheable = true",
       "RuleInfo.Origins = \"AMS, WAW, LHR\"",
       "RuleInfo.Destinations = \"HAJ, NYC, VIE\"",
-      "RuleInfo.AirlineCode = \"AF, KL, EK\"",
+      "RuleInfo.AirlineCode = \"EK\"",
       "RuleInfo.PeakworkEarliestDepDate = \"2022-02-01\"",
-      "RuleInfo.PeakworkLatestDepDate = \"2024-12-31\"",
+      "RuleInfo.PeakworkLatestDepDate = \"2024-02-05\"",
       "RuleInfo.PeakworkFltDurations = \"3, 5, 7\"",
-      "Log(\"Result available in cache\")"
+      "Log(\"Result available in cache\")",
+      "Retract(\"PeakworkDataIngestion\")"
+
     ]
   }
 ]
