@@ -28,7 +28,7 @@ func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 		panic(err)
 	}
 
-	searchRequest := translateRequest(&fcsQuery)
+	searchRequest := TranslateRequest(&fcsQuery)
 	flightCacheService := &service.FlightCacheService{
 		Request: searchRequest,
 		Response: &models.SearchResponse{
@@ -52,7 +52,7 @@ func (rl *Rules) GetRuleCheck(r string, ruleEngineInstance *engine.GruleEngine,
 }
 
 // Translates the given Flight Cache Search Query to Search Request
-func translateRequest(query *models.FlightCacheSearchQuery) *models.SearchRequest {
+func TranslateRequest(query *models.FlightCacheSearchQuery) *models.SearchRequest {
 	return &models.SearchRequest{
 		Cacheable:             false,
 		AirlineCode:           query.AirlineCode,

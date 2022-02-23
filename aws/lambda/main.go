@@ -93,6 +93,7 @@ func HandleRequest(input interface{}) (interface{}, error) {
 
 // Performs the rules check in rule Engine
 func performRuleCheck(request string) (string, error) {
+	log.Println("Request :", request)
 	l := log.New(os.Stdout, "Rules-API", log.LstdFlags)
 	rc := handlers.NewRuleChecker(l)
 	apiResponse, err := rc.GetRuleCheck(request, ruleEngineInstance, knowledgeBase)
