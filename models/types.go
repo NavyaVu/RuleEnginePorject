@@ -37,6 +37,7 @@ type SearchResponse struct {
 	PeakworkLatestDepDate   string `json:"peakworkLatestDepDate"`
 	PeakworkFltDurations    string `json:"peakworkFltDurations"`
 	IsProcessingCompleted   bool   `json:"isProcessingCompleted"`
+	JourneyType             string `json:"journeyType"`
 }
 
 type KnowledgeBaseForCacheRule struct {

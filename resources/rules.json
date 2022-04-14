@@ -22,7 +22,7 @@
   {
     "name": "FlightDepartureDateCheck",
     "desc": "when the flight's departure date is a past date",
-    "salience": 8,
+    "salience": 10,
     "when": "RuleInfo.IsPastDate(FltSearchRequest.DepartureDateTime) && RuleInfo.IsProcessingCompleted == false",
     "then": [
       "RuleInfo.IsProcessingCompleted = true",
@@ -53,6 +53,17 @@
     ]
   },
   {
+    "name": "FlightRouteLHRDXBCheck",
+    "desc": "when origin is LHR and destination is DXB",
+    "salience": 8,
+    "when": "FltSearchRequest.DepartureAirportCode == \"LHR\" && FltSearchRequest.ArrivalAirportCode == \"DXB\" && RuleInfo.IsProcessingCompleted == false",
+    "then": [
+      "RuleInfo.Cacheable = true",
+      "RuleInfo.IsProcessingCompleted = true",
+      "Log(\"Result available in cache\")"
+    ]
+  },
+  {
     "name": "PeakworkDataIngestion",
     "desc": "rule to provide the search details for Peakwork",
     "salience": 10,
@@ -61,13 +72,32 @@
       "RuleInfo.Cacheable = true",
       "RuleInfo.IsProcessingCompleted = true",
       "RuleInfo.IsPeakworkData = true",
-      "RuleInfo.Origins = \"AMS, WAW, LHR\"",
-      "RuleInfo.Destinations = \"HAJ, NYC, VIE\"",
+      "RuleInfo.Origins = \"AMS\"",
+      "RuleInfo.Destinations = \"HAJ,NYC\"",
       "RuleInfo.AirlineCode = \"EK\"",
-      "RuleInfo.PeakworkEarliestDepDate = \"2022-02-01\"",
-      "RuleInfo.PeakworkLatestDepDate = \"2024-02-05\"",
+      "RuleInfo.PeakworkEarliestDepDate = \"2022-06-01\"",
+      "RuleInfo.PeakworkLatestDepDate = \"2022-06-04\"",
       "RuleInfo.PeakworkFltDurations = \"3, 5, 7\"",
+      "RuleInfo.JourneyType = \"Roundtrip\"",
       "Log(\"Result available in cache\")"
+    ]
+  },
+  {
+    "name": "PeakworkDataExport",
+    "desc": "rule to provide the search details for Peakwork export",
+    "salience": 10,
+    "when": "FltSearchRequest.RuleGroup == \"Peakwork\" && FltSearchRequest.RequestType == \"GetSearchConfig\" && RuleInfo.IsProcessingCompleted == false",
+    "then": [
+      "RuleInfo.IsProcessingCompleted = true",
+      "RuleInfo.IsPeakworkData = true",
+      "RuleInfo.Origins = \"AMS\"",
+      "RuleInfo.Destinations = \"HAJ\"",
+      "RuleInfo.AirlineCode = \"EK\"",
+      "RuleInfo.PeakworkEarliestDepDate = \"2022-06-01\"",
+      "RuleInfo.PeakworkLatestDepDate = \"2022-06-04\"",
+      "RuleInfo.PeakworkFltDurations = \"3, 5\"",
+      "RuleInfo.JourneyType = \"Roundtrip\"",
+      "Log(\"Config for Peakwork data\")"
     ]
   }
 ]
